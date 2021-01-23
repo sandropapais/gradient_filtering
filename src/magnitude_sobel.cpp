@@ -9,12 +9,12 @@ using namespace std;
 void magnitudeSobel()
 {
     // load image from file
-    cv::Mat img;
-    img = cv::imread("../images/img1gray.png");
+    cv::Mat imgGray;
+    imgGray = cv::imread("../images/img1gray.png");
 
     // convert image to grayscale
-    cv::Mat imgGray;
-    cv::cvtColor(img, imgGray, cv::COLOR_BGR2GRAY);
+    //cv::Mat imgGray;
+    //cv::cvtColor(img, imgGray, cv::COLOR_BGR2GRAY);
 
     // apply smoothing
     cv::Mat blurred = imgGray.clone();
@@ -31,14 +31,14 @@ void magnitudeSobel()
 
     // apply filter
     cv::Mat result_x, result_y;
-    cv::filter2D(blurred, result_x, -1, kernel_x, cv::Point(-1, -1), 0, cv::BORDER_DEFAULT);
-    cv::filter2D(blurred, result_y, -1, kernel_y, cv::Point(-1, -1), 0, cv::BORDER_DEFAULT);
+    cv::filter2D(imgGray, result_x, -1, kernel_x, cv::Point(-1, -1), 0, cv::BORDER_DEFAULT);
+    cv::filter2D(imgGray, result_y, -1, kernel_y, cv::Point(-1, -1), 0, cv::BORDER_DEFAULT);
 
     // compute magnitude image
     cv::Mat magnitude = imgGray.clone();
     for (int r = 0; r < magnitude.rows; r++)
     {
-        for (int c = 0; c < magnitude.cols; c++)
+        for (int c = 0; c < magnitude.cols*3; c++)
         {
             magnitude.at<unsigned char>(r, c) = sqrt(pow(result_x.at<unsigned char>(r, c), 2) +
                                                      pow(result_y.at<unsigned char>(r, c), 2));
@@ -46,8 +46,7 @@ void magnitudeSobel()
     }
 
     // show result
-    string windowName = "Gaussian Blurring";
-    // string windowName = "Sobel filter magnitude image";
+    string windowName = "Sobel filter magnitude image";
     cv::namedWindow(windowName, 1); // create window
     cv::imshow(windowName, magnitude);
     cv::waitKey(0); // wait for keyboard input before continuing
