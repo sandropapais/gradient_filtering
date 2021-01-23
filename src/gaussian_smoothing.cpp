@@ -18,13 +18,20 @@ void gaussianSmoothing1()
                             7, 26, 41, 26, 7,
                             4, 16, 26, 16, 4,
                             1, 4, 7, 4, 1};
-    //cv::Mat kernel = cv::Mat(5, 5, CV_32F, gauss_data);
-    cv::Mat kernel = cv::Mat.ones(5,5,CV_32F);
+    cv::Mat kernel = cv::Mat(5, 5, CV_32F, gauss_data);
+    for (int i = 0; i < 25; i++)
+    {
+        gauss_data[i] /= 273;
+    }
+
     // apply filter
     cv::Mat result;
     cv::filter2D(img, result, -1, kernel, cv::Point(-1, -1), 0, cv::BORDER_DEFAULT);
 
     // show result
+    string windowNameOriginal = "Original Image";
+    cv::namedWindow(windowNameOriginal, 1); // create window
+    cv::imshow(windowNameOriginal, img);
     string windowName = "Gaussian Blurring";
     cv::namedWindow(windowName, 1); // create window
     cv::imshow(windowName, result);
